@@ -1,13 +1,20 @@
 const mongoose = require('mongoose');
+require('dotenv').config(); // Load environment variables from .env file
 
-// Define the MongoDB connection url
-const mogongoURL = 'mongodb://localhost:27017/hotels';
+// Define the MongoDB connection url(tye local mogo db r)
+// const mongoURL = process.env.MONGO_DB_LOCAL 
+const mongoURL = process.env.MONGODb_URL
+
 
 // Set up mongoDB connection
-mongoose.connect(mogongoURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+const connectDB = async () => {
+    try {
+        await mongoose.connect(mongoURL);
+        console.log("CONNECTED TO DATABASE SUCCESSFULLY");
+    } catch (error) {
+        console.error('COULD NOT CONNECT TO DATABASE:', error.message);
+    }
+};
 
 const db = mongoose.connection;
 
@@ -23,4 +30,4 @@ db.on('disconnected', () => {
 });
 
 // Export the db object for use in other files
-module.exports = db;
+module.exports = { connectDB, db };
